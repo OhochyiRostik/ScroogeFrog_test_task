@@ -15,16 +15,29 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from rest_framework.routers import SimpleRouter
 
 from events.views import EventViewSet
 
 router = SimpleRouter()
+# http://127.0.0.1:8000/api/v1/event/
 router.register(r'api/v1/event', EventViewSet)
 
 urlpatterns = [
+    # http://127.0.0.1:8000/admin/
     path('admin/', admin.site.urls),
+
+    # http://127.0.0.1:8000/api/v1/auth/session/login/
+    # http://127.0.0.1:8000/api/v1/auth/session/logout/
+    path('api/v1/auth/session/', include('rest_framework.urls')),
+
+    # http://127.0.0.1:8000/api/v1/users/
+    path('api/v1/', include('djoser.urls')),
+
+    # http://127.0.0.1:8000/api/v1/auth/token/login/
+    # http://127.0.0.1:8000/api/v1/auth/token/logout/
+    path('api/v1/auth/', include('djoser.urls.authtoken')),
 ]
 
 urlpatterns += router.urls
