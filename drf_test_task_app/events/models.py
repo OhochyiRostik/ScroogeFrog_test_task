@@ -8,7 +8,20 @@ class Event(models.Model):
     description = models.TextField()
     date = models.DateField()
     location = models.CharField(max_length=255)
-    organizer = models.ForeignKey(User, on_delete=models.CASCADE)
+    organizer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='organizer_event')
+    visitor = models.ManyToManyField(User, through='Registration', related_name='visitor_event')
 
     def __str__(self):
         return self.name
+
+
+class Registration(models.Model):
+    event = models.ForeignKey(Event, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    registration = models.BooleanField(default=False)
+
+    # class Meta:
+    #     unique_together = ('event', 'user')
+
+    def __str__(self):
+        return f'{self.user.email} - {self.event.name}'
