@@ -4,7 +4,7 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
 
-from events.models import Event
+from events.models import Event, Registration
 from events.serializers import EventSerializer
 from users.models import User
 
@@ -61,7 +61,7 @@ class EventsApiTestCase(APITestCase):
     def test_get_ordering(self):
         url = reverse('event-list')
         response = self.client.get(url, data={'ordering': '-description'})
-        setializer_data = EventSerializer([self.event_3, self.event_2, self.event_1],many=True).data
+        setializer_data = EventSerializer([self.event_3, self.event_2, self.event_1], many=True).data
         self.assertEquals(status.HTTP_200_OK, response.status_code)
         self.assertEquals(setializer_data, response.data)
 
@@ -85,7 +85,7 @@ class EventsApiTestCase(APITestCase):
         self.assertEqual(4, Event.objects.all().count())
 
     def test_update(self):
-        url = reverse('event-detail', args=(self.event_1.id, ))
+        url = reverse('event-detail', args=(self.event_1.id,))
         data = {
             "name": self.event_1.name,
             "description": "Description",
@@ -106,10 +106,25 @@ class EventsApiTestCase(APITestCase):
 
     def test_delete(self):
         self.assertEquals(3, Event.objects.all().count())
-        url = reverse('event-detail', args=(self.event_1.id, ))
+        url = reverse('event-detail', args=(self.event_1.id,))
 
         self.client.force_login(self.organizer_user)
         response = self.client.delete(url)
 
         self.assertEquals(status.HTTP_204_NO_CONTENT, response.status_code)
         self.assertEquals(2, Event.objects.all().count())
+
+    def test_event_registration(self):
+        url = reverse('registration-detail', args=(self.event_1.id,))
+        data = {
+            "registration": True,
+        }
+        json_data = json.dumps(data)
+        self.client.force_login(self.organizer_user)
+
+        response = self.client.patch(url, data=json_data,
+                                     content_type='application/json')
+        self.assertEquals(status.HTTP_200_OK, response.status_code)
+        relation = Registration.objects.get(user=self.organizer_user,
+                                            event=self.event_1)
+        self.assertTrue(relation.registration)
