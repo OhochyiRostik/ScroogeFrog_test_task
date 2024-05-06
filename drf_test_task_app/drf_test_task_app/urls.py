@@ -24,7 +24,8 @@ router = SimpleRouter()
 # http://127.0.0.1:8000/api/v1/event/
 router.register(r'api/v1/event', EventViewSet)
 
-# http://127.0.0.1:8000/api/v1/register
+# Event registration
+# http://127.0.0.1:8000/api/v1/register/1/
 router.register(r'api/v1/register', RegisterEvent)
 
 urlpatterns = [
@@ -35,6 +36,7 @@ urlpatterns = [
     # http://127.0.0.1:8000/api/v1/auth/session/logout/
     path('api/v1/auth/session/', include('rest_framework.urls')),
 
+    # Basic registration
     # http://127.0.0.1:8000/api/v1/users/
     path('api/v1/', include('djoser.urls')),
 
