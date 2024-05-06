@@ -17,6 +17,7 @@ class EventSerializerTestCase(TestCase):
             date='2024-05-04',
             location='location 1',
             organizer=organizer_user,
+
         )
         event_2 = Event.objects.create(
             name='event 2',
@@ -34,6 +35,7 @@ class EventSerializerTestCase(TestCase):
                 'date': '2024-05-04',
                 'location': 'location 1',
                 'organizer': event_1.organizer.id,
+                'visitor': []
             },
             {
                 'id': event_2.id,
@@ -42,6 +44,7 @@ class EventSerializerTestCase(TestCase):
                 'date': '2024-05-04',
                 'location': 'location 2',
                 'organizer': event_2.organizer.id,
+                'visitor': []
             },
         ]
         self.assertEqual(expected_data, data)

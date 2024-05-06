@@ -76,7 +76,7 @@ class EventsApiTestCase(APITestCase):
             "organizer": 1
         }
         json_data = json.dumps(data)
-        # self.client.force_login(self.organizer_user)
+        self.client.force_login(self.organizer_user)
         response = self.client.post(url,
                                     data=json_data,
                                     content_type='application/json'
@@ -94,7 +94,7 @@ class EventsApiTestCase(APITestCase):
             "organizer": self.organizer_user.id
         }
         json_data = json.dumps(data)
-        # self.client.force_login(self.organizer_user)
+        self.client.force_login(self.organizer_user)
         response = self.client.put(url,
                                    data=json_data,
                                    content_type='application/json'
@@ -108,7 +108,7 @@ class EventsApiTestCase(APITestCase):
         self.assertEquals(3, Event.objects.all().count())
         url = reverse('event-detail', args=(self.event_1.id, ))
 
-        # self.client.force_login(self.organizer_user)
+        self.client.force_login(self.organizer_user)
         response = self.client.delete(url)
 
         self.assertEquals(status.HTTP_204_NO_CONTENT, response.status_code)
