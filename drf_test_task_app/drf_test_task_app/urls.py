@@ -18,11 +18,14 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework.routers import SimpleRouter
 
-from events.views import EventViewSet
+from events.views import EventViewSet, RegisterEvent
 
 router = SimpleRouter()
 # http://127.0.0.1:8000/api/v1/event/
 router.register(r'api/v1/event', EventViewSet)
+
+# http://127.0.0.1:8000/api/v1/register
+router.register(r'api/v1/register', RegisterEvent)
 
 urlpatterns = [
     # http://127.0.0.1:8000/admin/
